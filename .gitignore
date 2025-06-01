@@ -1,0 +1,19 @@
+# Python
+.mypy_cache
+.pytest_cache
+.ruff_cache
+__pycache__/
+**/__pycache__/
+build/
+dist/
+wheels/
+
+# venv
+.venv
+.hatch
+
+# system
+.DS_Store
+
+# Database files
+*.db

@@ -7,55 +7,57 @@ name = "happenings"
 dynamic = ["version"]
 description = 'An app to create and search for events in your neighborhood'
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 license = "MIT"
-keywords = []
 authors = [
   { name = "Pierre Thirouin", email = "pierre.thirouin@gmail.com" },
 ]
-classifiers = [
-  "Development Status :: 4 - Beta",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
+
+dependencies = [
+  "fastapi==0.115.12",
+  "uvicorn==0.33.0",
+  "httpx==0.28.1",  # Required for TestClient
+  "sqlalchemy==2.0.41",
+  "pydantic_settings==2.9.1",
+  "pydantic==2.11.5",
+  "bcrypt==4.3.0",  # For secure password hashing
+  "pyjwt==2.10.1",  # For JWT authentication
 ]
-dependencies = []
+
+[project.scripts]
+happenings = "happenings.cli:serve"
 
 [project.urls]
-Documentation = "https://github.com/Pierre Thirouin/happenings#readme"
-Issues = "https://github.com/Pierre Thirouin/happenings/issues"
-Source = "https://github.com/Pierre Thirouin/happenings"
+Documentation = "https://github.com/pith/happenings#readme"
+Issues = "https://github.com/pith/happenings/issues"
+Source = "https://github.com/pith/happenings"
+
+[tool.hatch.envs.default]
+extra-dependencies = [
+  "mypy>=1.15.0",
+  "ruff>=0.11.12",
+  "pytest>=8.0.0",
+]
+
+[tool.hatch.envs.default.scripts]
+check = "mypy --install-types --non-interactive {args:src/happenings tests}"
+lint = "ruff check ."
+format = "ruff format ."
+test = "pytest {args:tests}"
 
 [tool.hatch.version]
 path = "src/happenings/__about__.py"
 
-[tool.hatch.envs.types]
-extra-dependencies = [
-  "mypy>=1.0.0",
-]
-[tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/happenings tests}"
+[tool.ruff]
+target-version = "py312"
 
-[tool.coverage.run]
-source_pkgs = ["happenings", "tests"]
-branch = true
-parallel = true
-omit = [
-  "src/happenings/__about__.py",
-]
+[tool.ruff.lint]
+# Enable pycodestyle (`E`), Pyflakes (`F`), and import sorting (`I`) codes
+select = ["E", "F", "I"]
+fixable = ["A", "B", "C", "D", "E", "F", "I"]
+isort.known-first-party = ["happenings"]
 
-[tool.coverage.paths]
-happenings = ["src/happenings", "*/happenings/src/happenings"]
-tests = ["tests", "*/happenings/tests"]
-
-[tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
