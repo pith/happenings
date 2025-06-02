@@ -19,8 +19,8 @@ COPY README.md .
 COPY LICENSE.txt .
 COPY src/ src/
 
-# Install Python dependencies and remove build tools to reduce image size
-RUN hatch env create \
+RUN hatch build \
+    && pip install dist/*.whl \
     && apt-get remove -y build-essential \
     && apt-get autoremove -y
 
@@ -34,4 +34,4 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
 
-CMD ["hatch", "run", "happenings"]
+CMD ["happenings"]
