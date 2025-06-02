@@ -12,7 +12,7 @@ def serve():
     uvicorn.run(
         "happenings.main:app",
         host="0.0.0.0",
-        port=os.getenv("PORT", default=8000),
+        port=int(os.getenv("PORT", default=8000)),
         reload=True,
     )
 
