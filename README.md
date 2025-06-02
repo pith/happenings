@@ -1,7 +1,9 @@
 # Happenings
 
-[![PyPI - Version](https://img.shields.io/pypi/v/happenings.svg)](https://pypi.org/project/happenings)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/happenings.svg)](https://pypi.org/project/happenings)
+[![Test](https://github.com/pith/happenings/actions/workflows/test.yml/badge.svg)](https://github.com/pith/happenings/actions/workflows/test.yml)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/pith/happenings/blob/main/LICENSE.txt)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?logo=fastapi)](https://fastapi.tiangolo.com)
 
 -----
 
