@@ -2,7 +2,11 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-from happenings.application import AuthenticationService, UserManagementService
+from happenings.application import (
+    AuthenticationService,
+    InvalidTokenError,
+    UserManagementService,
+)
 from happenings.domain.user import User, UserRepository
 from happenings.infrastructure.persistence import get_db
 
@@ -33,7 +37,7 @@ async def get_current_user(
                 headers={"WWW-Authenticate": "Bearer"},
             )
         return user
-    except Exception as e:
+    except InvalidTokenError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=str(e),

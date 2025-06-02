@@ -31,7 +31,6 @@ class EventCreated(EventCreate):
 async def create_event(
     request: EventCreate,
     current_user: User = Depends(get_current_user),
-) -> EventCreate:
+) -> EventCreated:
     # TODO: Implement event creation logic in an event service
-    print(current_user)
     return EventCreated(**request.model_dump(), organizer=current_user.username)

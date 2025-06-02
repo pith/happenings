@@ -42,7 +42,7 @@ curl http://localhost:8000/login \
   -d '{
     "username": "JohnDoe44",
     "password": "123"
-  }' | jq
+  }' | jq .
 ```
 
 * Create an event
@@ -54,8 +54,8 @@ curl http://localhost:8000/events \
     "name": "Hellfest",
     "start_datetime": "2025-06-19T10:00:00",
     "end_datetime": "2025-06-22T16:00:00",
-    "location": { "lat": 47.0971567, "long": -1.2727167}
-  }' | jq
+    "location": { "lat": 47.0971567, "long": -1.2727167 }
+  }' | jq .
 ```
 
 ## License

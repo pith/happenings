@@ -16,5 +16,4 @@ wheels/
 .DS_Store
 
 # Database files
-test.db
 *.db
