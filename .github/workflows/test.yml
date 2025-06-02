@@ -42,3 +42,21 @@ jobs:
 
     - name: Run tests
       run: hatch run test
+
+    - name: Build Docker image
+      run: docker build -t happenings:test .
+
+    - name: Test Docker image
+      run: |
+        # Start the container in the background
+        docker run -d --name happenings-test -p 8000:8000 happenings:test
+        
+        # Wait for the application to start
+        sleep 30
+        
+        # Test that the application is responding
+        curl -f http://localhost:8000/health || exit 1
+        
+        # Clean up
+        docker stop happenings-test
+        docker rm happenings-test
