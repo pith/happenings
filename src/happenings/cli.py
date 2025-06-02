@@ -2,6 +2,8 @@
 Command-line interface for the Happenings app.
 """
 
+import os
+
 import uvicorn
 
 
@@ -10,7 +12,7 @@ def serve():
     uvicorn.run(
         "happenings.main:app",
         host="0.0.0.0",
-        port=8000,
+        port=os.getenv("PORT", default=8000),
         reload=True,
     )
 
