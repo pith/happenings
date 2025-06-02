@@ -13,13 +13,17 @@
 - [Usage](#usage)
 - [License](#license)
 
-## Installation
+## Production links
 
+- Prod: https://happenings-production.up.railway.app/
+- [docs](https://happenings-production.up.railway.app/docs)
+
+## Local usage
+
+* Create env
 ```console
 hatch env create
 ```
-
-## Usage
 
 * Start the server:
 ```
