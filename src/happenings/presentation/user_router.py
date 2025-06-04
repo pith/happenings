@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 
+from happenings.application.AuthenticationService import InvalidTokenError
 from happenings.application.UserManagementService import UserManagementService
 
 from .dependency_injection import get_user_management_service
@@ -70,6 +72,31 @@ async def login(
             access_token=access_token, refresh_token=refresh_token
         )
     except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+security = HTTPBearer()
+
+
+@router.post("/refresh-token", response_model=AuthenticationTokens, status_code=200)
+async def refresh_token(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    user_management_service: UserManagementService = Depends(
+        get_user_management_service
+    ),
+) -> AuthenticationTokens:
+    try:
+        access_token, refresh_token = user_management_service.refresh_token(
+            credentials.credentials
+        )
+        return AuthenticationTokens(
+            access_token=access_token, refresh_token=refresh_token
+        )
+    except (ValueError, InvalidTokenError):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",

@@ -77,15 +77,21 @@ class AuthenticationService:
             payload = jwt.decode(
                 token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
             )
-            user_id: str = payload.get("sub")
-            token_type_claim: str = payload.get("type")
+            token_payload = TokenPayload(**payload)
 
-            if user_id is None or token_type_claim != token_type:
+            if token_payload.sub is None or token_payload.type != token_type:
                 raise InvalidTokenError(
                     f"Invalid {token_type} token or missing user ID"
                 )
 
-            return user_id
+            return token_payload.sub
+        except jwt.ExpiredSignatureError:
+            raise InvalidTokenError(f"{token_type.capitalize()} token has expired")
+        except jwt.InvalidSignatureError:
+            raise InvalidTokenError(
+                f"{token_type.capitalize()} token has invalid signature"
+            )
+        except jwt.DecodeError as e:
+            raise InvalidTokenError(f"Failed to decode {token_type} token: {str(e)}")
         except jwt.PyJWTError as e:
-            print(f"JWT Error: {e}")
-            raise InvalidTokenError()
+            raise InvalidTokenError(f"JWT validation error: {str(e)}")
