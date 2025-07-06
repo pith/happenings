@@ -40,5 +40,22 @@ class UserManagementService:
 
         raise ValueError("Invalid username or password")
 
+    def refresh_token(self, refresh_token: str) -> tuple[str, str]:
+        """
+        Refresh the access and refresh tokens for a user.
+        """
+        user_name = AuthenticationService.verify_token(refresh_token, "refresh")
+        if user_name is None:
+            raise ValueError("Invalid token")
+
+        user = self.user_repository.find_by_username(user_name)
+        if user is None:
+            raise ValueError("User not found")
+        access_token = AuthenticationService.create_access_token(username=user.username)
+        refresh_token = AuthenticationService.create_refresh_token(
+            username=user.username
+        )
+        return access_token, refresh_token
+
     def get_user(self, user_id) -> User | None:
         return self.user_repository.find_by_id(user_id)

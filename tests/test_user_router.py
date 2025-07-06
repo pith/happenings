@@ -141,3 +141,40 @@ def test_login_return_401_when_invalid_credentials():
     response = client.post("/login", json=login_data)
     assert response.status_code == 401
     assert "detail" in response.json()
+
+
+def test_refresh_token_return_new_tokens():
+    # First create a user
+    signup_data = {
+        "username": "testuser",
+        "email": "test@example.com",
+        "password": "securepassword123",
+    }
+    signup_response = client.post("/signup", json=signup_data)
+
+    response = client.post(
+        "/refresh-token",
+        headers={"Authorization": f"Bearer {signup_response.json()['refresh_token']}"},
+    )
+    assert response.status_code == 200
+    response_data = response.json()
+    assert "access_token" in response_data
+    assert "refresh_token" in response_data
+    assert len(response_data["access_token"]) > 0
+    assert len(response_data["refresh_token"]) > 0
+
+
+def test_refresh_token_return_401_when_invalid_token():
+    response = client.post(
+        "/refresh-token",
+        headers={
+            "Authorization": "Bearer invalidtoken",
+        },
+    )
+    assert response.status_code == 401
+    assert "detail" in response.json()
+
+
+def test_refresh_token_return_403_when_missing_token():
+    response = client.post("/refresh-token")
+    assert response.status_code == 403
